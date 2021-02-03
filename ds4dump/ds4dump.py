@@ -65,6 +65,18 @@ def _dump(base_info):
             dev_info['reports'].append(base64.b64encode(report).decode())
         print(f'Done reading {_N_REPORTS} reports', file=sys.stderr)
 
+        print('Retrieving calibration data...', file=sys.stderr)
+        data = bytes(dev.get_feature_report(0x02, _BUF_SZ))
+        dev_info['report_0x02'] = base64.b64encode(data).decode()
+        print('Done retrieving calibration data', file=sys.stderr)
+
+        print(f'Reading {_N_REPORTS} reports after calibration...', file=sys.stderr)
+        dev_info['reports_after_calibration'] = []
+        for _ in range(_N_REPORTS):
+            report = bytes(dev.read(_BUF_SZ))
+            dev_info['reports_after_calibration'].append(base64.b64encode(report).decode())
+        print(f'Done reading {_N_REPORTS} reports after calibration', file=sys.stderr)
+
     return dev_info
 
 
