@@ -66,8 +66,11 @@ def _dump(base_info):
         print(f'Done reading {_N_REPORTS} reports', file=sys.stderr)
 
         print('Retrieving calibration data...', file=sys.stderr)
-        data = bytes(dev.get_feature_report(0x02, _BUF_SZ))
-        dev_info['report_0x02'] = base64.b64encode(data).decode()
+        try:
+            data = bytes(dev.get_feature_report(0x02, _BUF_SZ))
+            dev_info['report_0x02'] = base64.b64encode(data).decode()
+        except IOError:
+            dev_info['report_0x02'] = None
         print('Done retrieving calibration data', file=sys.stderr)
 
         print(f'Reading {_N_REPORTS} reports after calibration...', file=sys.stderr)
