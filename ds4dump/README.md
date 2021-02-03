@@ -33,7 +33,7 @@ Chinese clone #1:
 }
 ```
 
-Chinese clone #2:
+Chinese clone #2 (causes kernel crash in 5.10.12):
 
 ```json
 {
@@ -62,4 +62,40 @@ Chinese clone #2:
         "AYCAgIAIAAAAAGQ/AO//CADm/1T4Ah4MBgAAAAAAGgAAAACAAAAAgAAAAACAAAAAgAAAAACAAAAAgAAAAACAAA=="
     ]
 }
+```
+
+## Diff
+
+```
+00000000: 01 80 80 80 80 08 00 cc 00 00 73 13 00 e9 ff f9  ..........s.....  #1
+00000000: 01 80 80 80 80 08 00 00 00 00 f4 04 00 fd ff 07  ................  #2
+          ^^ report type
+                                        ^^ ^^ timestamp
+                                                 ^^ ^^ gyroscope X 0
+                                                       ^^ gyroscope X 1
+
+00000010: ff ed ff 54 00 f2 1e 4f 05 00 00 00 00 00 1b 00  ...T...O........  #1
+00000010: 00 ef ff 33 f8 13 1e ea 05 00 00 00 00 00 1a 00  ...3............  #2
+          ^^ gyroscope X 1
+             ^^ ^^ gyroscope X 2
+                   ^^ ^^ gyroscope X 3
+                         ^^ ^^ gyroscope X 4
+                               ^^ ^^ gyroscope X 5
+                                                    ^^ battery state
+
+00000020: 00 00 00 80 00 00 00 80 00 00 00 00 80 00 00 00  ................  #1
+00000020: 00 00 00 80 00 00 00 80 00 00 00 00 80 00 00 00  ................  #2
+             ^^ number of touch events
+                ^^ touch event #0 timestamp
+                   ^^ ^^ ^^ ^^ touch event #0 data
+                               ^^ touch event #1 timestamp
+                                  ^^ ^^ ^^ ^^ touch event #1 data
+                                              ^^ touch event #2 timestamp
+                                                 ^^ ^^ ^^ touch event #2 data
+
+00000030: 80 00 00 00 00 80 00 00 00 80 00 00 00 00 80 00  ................  #1
+00000030: 80 00 00 00 00 80 00 00 00 80 00 00 00 00 80 00  ................  #2
+          ^^ touch event #2 data
+             ^^ touch event #3 timestamp
+                ^^ ^^ ^^ ^^ touch event #3 data
 ```
